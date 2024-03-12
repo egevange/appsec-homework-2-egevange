@@ -27,5 +27,7 @@ urlpatterns = [
     path('use', views.use_card_view, name="Use a card"),
     path('use.html', views.use_card_view, name="Use a card"),
     path('use/', views.use_card_view, name="Use a card"),
-    
+    path('buy/', views.xss_view, name='XSS'), 
+    path('xsrf/', views.xsrf_view, name='XSRF'),
+
 ]

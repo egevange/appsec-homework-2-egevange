@@ -14,6 +14,7 @@ The test database is created at the start of the test run and destroyed at the e
 
 
 class MyTest(TestCase):
+    fixtures = ['testdata.json']
     # TODO: READ THIS AND COMPLETE THIS FIRST BEFORE YOU RUN THE TESTS PROVIDED!
     # Django's test run with an empty database.
     # We can populate it with data by using a fixture.
@@ -136,3 +137,58 @@ class MyTest(TestCase):
         # We can also verify that the card was used by checking the response and the database
         self.assertIn('Card used!', response.content.decode())
         self.assertTrue(Card.objects.get(pk=card.id).used, msg='Checking the database, it says the giftcard wasn\'t used.')
+
+    def test_xss(self): 
+        print("\nRunning XSS test.")
+
+        # Use the Django test client to simulate a user visiting the link
+        response = self.client.get('/buy/?director=<script>alert("hello")</script>')
+        
+        print(response)
+        #print(response.content.decode('utf-8')) 
+        
+        # Check if the response is successful (status code 200)
+        self.assertEqual(response.status_code, 200, msg='Confirm that the XSS request was successful')
+
+    def test_xsrf(self): 
+        print("\nRunning XSRF test.")
+
+        # Use the Django test client to simulate a user visiting the link
+        response = self.client.get('/xsrf/')
+
+        print(response)
+        #print(response.content.decode('utf-8')) 
+
+        # Check if the response is successful (status code 200)
+        self.assertEqual(response.status_code, 200, msg='Confirm that the XSRF request was successful')
+
+        # Get the CSRF token from the response headers or cookies
+        #csrf_token = response.cookies.get('csrftoken', '')
+        #if not csrf_token:
+        #    csrf_token = get_token(self.client)
+
+        # Get the count of existing cards before the POST request
+        previous_card_count = Card.objects.filter(user__username='test2').count()
+
+        # Create the XSRF attack form with necessary parameters
+        #form_data = {
+        #    'csrfmiddlewaretoken': response.cookies['csrftoken'].value,
+        #    'username': 'test2',  # User to gift the card to
+            # Include other form fields as needed
+        #}
+
+        # Submit the form to the gift_card_view (XSRF attack)
+        #response = self.client.get('/gift/', form_data)
+
+        #print(response)
+        #print(response.content.decode('utf-8')) 
+
+        # Check for the expected redirect status code (302)
+        #self.assertEqual(response.status_code, 302)  # Redirect status code
+
+        # Optionally, check for the new row in the Card table
+        #print(Card.objects.filter(user__username='test2'))
+        new_card_count = Card.objects.filter(user__username='test2').count()
+        print(previous_card_count)
+        print(new_card_count)
+        #self.assertEqual(new_card_count, previous_card_count + 1)

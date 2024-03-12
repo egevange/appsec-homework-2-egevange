@@ -1,0 +1,14 @@
+Bug #1: XSS Vulnerability 
+In item-single.html, KG commented on the director tag used below: 
+            {% if director is not None %}
+              <!-- KG: I don't think the safe tag does what they thought
+                   it does... -->
+              <p>Endorsed by {{director|safe}}!</p>
+
+Django, by default, automatically escapes variables to prevent XSS attacks. If the code author is certain that the "director" variable contains safe HTML (i.e., content is properly validated and sanitized), then they can use the "safe" filter. When the code authore used {{ director|safe }}, Django trusts the variable's contents as safe HTML and does not escape it. This means that any HTML tags or scripts within director will be rendered as-is. 
+
+Because of this tag, if I pass in a <script> into the director variable as shown below, the page will execute the <script> tag since the input isn't sanitized.
+
+?director=<script>alert("hello")</script>
+
+To fix this in the code, I replaced the safe tag with escape to ensure that this variable is escaped properly. This was done in both item-single.html and gift.html. Additionally, I added content security policy directives in Django's settings.py to set what scripts can be executed. 

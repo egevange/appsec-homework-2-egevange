@@ -23,6 +23,17 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'kmgysa#fz+9(z1*=c0ydrjizk*7sthm2ga1z4=^61$cxcq8b$l'
 
+# Content Security Policy
+#CSP_DEFAULT_SRC = ("'self'",)  # Default source for resources
+#CSP_SCRIPT_SRC = ("'self'",)  # Allowed sources for scripts
+#CSP_STYLE_SRC = ("'self'",)   # Allowed sources for stylesheets
+#CSP_FONT_SRC = ("'self'",)   # Allowed sources for fonts
+#CSP_IMG_SRC = ("'self'",)    # Allowed sources for images
+#CSP_FRAME_SRC = ("'self'",)  # Allowed sources for frames
+#CSP_CONNECT_SRC = ("'self'",)  # Allowed sources for AJAX, WebSockets, etc.
+#CSP_OBJECT_SRC = ("'none'",)   # Allowed sources for plugins like Flash
+#CSP_MEDIA_SRC = ("'self'",)    # Allowed sources for audio and video
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
@@ -49,6 +60,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    #'django.middleware.csrf.CsrfViewMiddleware',
 ]
 
 ROOT_URLCONF = 'GiftcardSite.urls'

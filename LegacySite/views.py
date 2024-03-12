@@ -251,3 +251,15 @@ def use_card_view(request):
         return render(request, "use-card.html", context)
     return HttpResponse("Error 404: Internal Server Error")
 
+def xss_view(request, prod_num=0):
+    if request.method == 'GET':
+        context = {"prod_num" : prod_num}
+        director = request.GET.get('director', None)
+        if director is not None:
+            # KG: Wait, what is this used for? Need to check the template.
+            context['director'] = director
+    return render(request, 'index-single.html', context)
+
+def xsrf_view(request):
+    return render(request, 'xsrf.html')
+
